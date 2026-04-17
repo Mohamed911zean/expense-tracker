@@ -8,6 +8,7 @@ import authRoutes from './routes/authRoutes.js'
 import incomeRoutes from './routes/IncomeRoutes.js'
 import expenseRoutes from './routes/ExpenseRoutes.js'
 import aqusetionsRoutes from './routes/AqusetionsRoutes.js'
+import dashboardRoutes from './routes/dashboardRoutes.js'
 
 const app = express()
 
@@ -25,7 +26,7 @@ app.use("/api/v1/auth" , authRoutes)
 app.use("/api/v1/income" , incomeRoutes)
 app.use("/api/v1/expense" , expenseRoutes)
 app.use("/api/v1/aqusetions" , aqusetionsRoutes)
-
+app.use("/api/v1/dashboard" , dashboardRoutes)
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => console.log("server running on port:", PORT))
