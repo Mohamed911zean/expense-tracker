@@ -1,97 +1,236 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import moment from 'moment';
+import axiosInstance from '../utils/axiosInstance';
+import { API_PATHS } from '../utils/pathApi';
 
 const TransactionContext = createContext(null);
 
-const MOCK_TRANSACTIONS = [
-  { id: '1', title: 'TechGlobal Industries', category: 'Salary', type: 'income', amount: 8500, date: '2024-10-28', description: 'Full-time • Senior Architect', status: 'Completed' },
-  { id: '2', title: 'Studio Kinetic', category: 'Freelance', type: 'income', amount: 2100, date: '2024-10-15', description: 'Contract • Design Strategy', status: 'Completed' },
-  { id: '3', title: 'Vanguard Real Estate', category: 'Investment', type: 'income', amount: 1200, date: '2024-10-02', description: 'Dividend • Quarterly Payout', status: 'Completed' },
-  { id: '4', title: 'Private Consulting', category: 'Freelance', type: 'income', amount: 650, date: '2024-10-01', description: 'Contract • Advisory', status: 'Completed' },
-  { id: '5', title: 'Artisan Coffee & Roastery', category: 'Lifestyle', type: 'expense', amount: 14.50, date: '2024-10-24', description: 'Dining & Drinks', status: 'Personal' },
-  { id: '6', title: 'Premium Streaming Duo', category: 'Entertainment', type: 'expense', amount: 24.99, date: '2024-10-23', description: 'Entertainment', status: 'Fixed' },
-  { id: '7', title: 'Luxury Flat Monthly Rent', category: 'Housing', type: 'expense', amount: 1250, date: '2024-10-01', description: 'Housing', status: 'Fixed' },
-  { id: '8', title: 'The Verdant Bistro', category: 'Dining', type: 'expense', amount: 86.50, date: '2024-10-24', description: 'Dining & Lifestyle', status: 'Personal' },
-  { id: '9', title: 'Nordic Design Lab', category: 'Home Decor', type: 'expense', amount: 340, date: '2024-10-23', description: 'Home Decor', status: 'Personal' },
-  { id: '10', title: 'Tesla Supercharger', category: 'Transport', type: 'expense', amount: 32.50, date: '2024-10-22', description: 'Transport', status: 'Fixed' },
-  { id: '11', title: 'Whole Foods Market', category: 'Groceries', type: 'expense', amount: 84.22, date: '2024-10-22', description: 'Groceries', status: 'Personal' },
-  { id: '12', title: 'Figma Pro Annual', category: 'Subscriptions', type: 'expense', amount: 144, date: '2024-10-21', description: 'Subscriptions', status: 'Fixed' },
-  { id: '13', title: 'Uber Technologies', category: 'Transport', type: 'expense', amount: 32.50, date: '2024-10-20', description: 'Transport', status: 'Personal' },
-  { id: '14', title: 'Quarterly Dividend', category: 'Investment', type: 'income', amount: 1240, date: '2024-10-24', description: 'Investments', status: 'Completed' },
-];
-
 export function TransactionProvider({ children }) {
-  const [transactions, setTransactions] = useState(MOCK_TRANSACTIONS);
+  const [income, setIncome] = useState([]);
+  const [expenses, setExpenses] = useState([]);
+  const [acquisitions, setAcquisitions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const addTransaction = useCallback((transaction) => {
-    const newTransaction = {
-      ...transaction,
-      id: Date.now().toString(),
-      date: transaction.date || new Date().toISOString().split('T')[0],
+  // ─── Normalizers ────────────────────────────────────────────────────────────
+  const normalizeIncome = (item) => ({
+    id: item._id,
+    title: item.source,
+    type: 'income',
+    amount: item.amount,
+    date: item.date,
+    category: item.source,
+    description: item.source,
+    status: 'Completed',
+  });
+
+  const normalizeExpense = (item) => ({
+    id: item._id,
+    title: item.category,
+    type: 'expense',
+    amount: item.amount,
+    date: item.date,
+    category: item.category,
+    description: item.category,
+    status: 'Personal',
+  });
+
+  // ─── Fetchers ────────────────────────────────────────────────────────────────
+  const fetchIncome = useCallback(async () => {
+    try {
+      const res = await axiosInstance.get(API_PATHS.INCOME.GET_ALL_INCOME);
+      setIncome((res.data || []).map(normalizeIncome));
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to fetch income');
+    }
+  }, []);
+
+  const fetchExpenses = useCallback(async () => {
+    try {
+      const res = await axiosInstance.get(API_PATHS.EXPENSE.GET_ALL_EXPENSE);
+      setExpenses((res.data || []).map(normalizeExpense));
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to fetch expenses');
+    }
+  }, []);
+
+  const fetchAcquisitions = useCallback(async () => {
+    try {
+      const res = await axiosInstance.get(API_PATHS.ACQUISITIONS.GET_ALL);
+      setAcquisitions(
+        (res.data || []).map((item) => ({ ...item, id: item._id }))
+      );
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to fetch acquisitions');
+    }
+  }, []);
+
+  // Fetch everything on mount
+  useEffect(() => {
+    const fetchAll = async () => {
+      setLoading(true);
+      await Promise.all([fetchIncome(), fetchExpenses(), fetchAcquisitions()]);
+      setLoading(false);
     };
-    setTransactions((prev) => [newTransaction, ...prev]);
-    return newTransaction;
-  }, []);
+    fetchAll();
+  }, [fetchIncome, fetchExpenses, fetchAcquisitions]);
 
-  const deleteTransaction = useCallback((id) => {
-    setTransactions((prev) => prev.filter((t) => t.id !== id));
-  }, []);
-
-  const getIncome = useCallback(() => {
-    return transactions.filter((t) => t.type === 'income');
-  }, [transactions]);
-
-  const getExpenses = useCallback(() => {
-    return transactions.filter((t) => t.type === 'expense');
-  }, [transactions]);
-
-  const getTotalIncome = useCallback(() => {
-    return getIncome().reduce((sum, t) => sum + t.amount, 0);
-  }, [getIncome]);
-
-  const getTotalExpenses = useCallback(() => {
-    return getExpenses().reduce((sum, t) => sum + t.amount, 0);
-  }, [getExpenses]);
-
-  const getBalance = useCallback(() => {
-    return getTotalIncome() - getTotalExpenses();
-  }, [getTotalIncome, getTotalExpenses]);
-
-  const getRecentTransactions = useCallback((limit = 5) => {
-    return [...transactions]
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, limit);
-  }, [transactions]);
-
-  const getCategoryBreakdown = useCallback((type = 'expense') => {
-    const filtered = transactions.filter((t) => t.type === type);
-    const categories = {};
-    filtered.forEach((t) => {
-      categories[t.category] = (categories[t.category] || 0) + t.amount;
+  // ─── Income mutations ────────────────────────────────────────────────────────
+  const addIncome = async (data) => {
+    await axiosInstance.post(API_PATHS.INCOME.ADD_INCOME, {
+      source: data.source,
+      amount: parseFloat(data.amount),
+      date: data.date || new Date().toISOString(),
     });
-    return Object.entries(categories)
-      .map(([name, amount]) => ({ name, amount }))
-      .sort((a, b) => b.amount - a.amount);
-  }, [transactions]);
+    await fetchIncome();
+  };
+
+  const deleteIncome = async (id) => {
+    await axiosInstance.delete(API_PATHS.INCOME.DELETE_INCOME(id));
+    await fetchIncome();
+  };
+
+  const downloadIncome = async () => {
+    const res = await axiosInstance.get(API_PATHS.INCOME.DOWNLOAD_INCOME, {
+      responseType: 'blob',
+    });
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'income.xlsx');
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  };
+
+  // ─── Expense mutations ───────────────────────────────────────────────────────
+  const addExpense = async (data) => {
+    await axiosInstance.post(API_PATHS.EXPENSE.ADD_EXPENSE, {
+      category: data.category,
+      amount: parseFloat(data.amount),
+      date: data.date || new Date().toISOString(),
+    });
+    await fetchExpenses();
+  };
+
+  const deleteExpense = async (id) => {
+    await axiosInstance.delete(API_PATHS.EXPENSE.DELETE_EXPENSE(id));
+    await fetchExpenses();
+  };
+
+  const downloadExpense = async () => {
+    const res = await axiosInstance.get(API_PATHS.EXPENSE.DOWNLOAD_EXPENSE, {
+      responseType: 'blob',
+    });
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'expenses.xlsx');
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  };
+
+  // ─── Acquisition mutations ───────────────────────────────────────────────────
+  const addAcquisition = async (data) => {
+    await axiosInstance.post(API_PATHS.ACQUISITIONS.ADD, {
+      name: data.name,
+      target: parseFloat(data.target),
+      saved: parseFloat(data.saved) || 0,
+    });
+    await fetchAcquisitions();
+  };
+
+  const deleteAcquisition = async (id) => {
+    await axiosInstance.delete(API_PATHS.ACQUISITIONS.DELETE(id));
+    await fetchAcquisitions();
+  };
+
+  // ─── Computed helpers (derived from real data) ───────────────────────────────
+  const getAllTransactions = useCallback(
+    () => [...income, ...expenses],
+    [income, expenses]
+  );
+
+  const getIncome = useCallback(() => income, [income]);
+  const getExpenses = useCallback(() => expenses, [expenses]);
+
+  const getTotalIncome = useCallback(
+    () => income.reduce((sum, t) => sum + t.amount, 0),
+    [income]
+  );
+
+  const getTotalExpenses = useCallback(
+    () => expenses.reduce((sum, t) => sum + t.amount, 0),
+    [expenses]
+  );
+
+  const getBalance = useCallback(
+    () => getTotalIncome() - getTotalExpenses(),
+    [getTotalIncome, getTotalExpenses]
+  );
+
+  const getRecentTransactions = useCallback(
+    (limit = 5) =>
+      [...income, ...expenses]
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, limit),
+    [income, expenses]
+  );
+
+  const getCategoryBreakdown = useCallback(
+    (type = 'expense') => {
+      const list = type === 'income' ? income : expenses;
+      const cats = {};
+      list.forEach((t) => {
+        cats[t.category] = (cats[t.category] || 0) + t.amount;
+      });
+      return Object.entries(cats)
+        .map(([name, amount]) => ({ name, amount }))
+        .sort((a, b) => b.amount - a.amount);
+    },
+    [income, expenses]
+  );
 
   const getMonthlyData = useCallback(() => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return months.map((month, index) => {
-      const monthTransactions = transactions.filter((t) => {
-        const d = new Date(t.date);
-        return d.getMonth() === index;
-      });
-      const income = monthTransactions.filter((t) => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-      const expense = monthTransactions.filter((t) => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-      return { month, income, expense };
+      const monthIncome = income
+        .filter((t) => new Date(t.date).getMonth() === index)
+        .reduce((s, t) => s + t.amount, 0);
+      const monthExpense = expenses
+        .filter((t) => new Date(t.date).getMonth() === index)
+        .reduce((s, t) => s + t.amount, 0);
+      return { month, income: monthIncome, expense: monthExpense };
     });
-  }, [transactions]);
+  }, [income, expenses]);
 
   return (
     <TransactionContext.Provider
       value={{
-        transactions,
-        addTransaction,
-        deleteTransaction,
+        income,
+        expenses,
+        acquisitions,
+        loading,
+        error,
+        // Income
+        addIncome,
+        deleteIncome,
+        downloadIncome,
+        fetchIncome,
+        // Expense
+        addExpense,
+        deleteExpense,
+        downloadExpense,
+        fetchExpenses,
+        // Acquisitions
+        addAcquisition,
+        deleteAcquisition,
+        fetchAcquisitions,
+        // Computed
+        getAllTransactions,
         getIncome,
         getExpenses,
         getTotalIncome,

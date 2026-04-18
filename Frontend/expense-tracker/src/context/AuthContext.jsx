@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import axiosInstance from '../utils/axiosInstance';
+import { API_PATHS } from '../utils/pathApi';
 
 const AuthContext = createContext(null);
 
@@ -6,56 +8,53 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // On mount, validate the stored token by hitting /user-info
   useEffect(() => {
-    const stored = localStorage.getItem('verdant_user');
-    if (stored) {
-      try {
-        setUser(JSON.parse(stored));
-      } catch {
-        localStorage.removeItem('verdant_user');
-      }
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setLoading(false);
+      return;
     }
-    setLoading(false);
+
+    axiosInstance
+      .get(API_PATHS.AUTH.GET_USER_INFO)
+      .then((res) => {
+        setUser(res.data);
+        localStorage.setItem('verdant_user', JSON.stringify(res.data));
+      })
+      .catch(() => {
+        // Token invalid or expired — clear everything
+        localStorage.removeItem('token');
+        localStorage.removeItem('verdant_user');
+        setUser(null);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
-  const login = (email, password) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (email && password) {
-          const userData = {
-            id: '1',
-            name: 'Alexander Verdant',
-            email,
-            avatar: null,
-          };
-          setUser(userData);
-          localStorage.setItem('verdant_user', JSON.stringify(userData));
-          resolve(userData);
-        } else {
-          reject(new Error('Invalid credentials'));
-        }
-      }, 800);
-    });
+  const login = async (email, password) => {
+    const res = await axiosInstance.post(API_PATHS.AUTH.LOGIN, { email, password });
+    const { token, user: userData } = res.data;
+    localStorage.setItem('token', token);
+    localStorage.setItem('verdant_user', JSON.stringify(userData));
+    setUser(userData);
+    return userData;
   };
 
-  const signup = (name, email, password) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (name && email && password) {
-          const userData = { id: '1', name, email, avatar: null };
-          setUser(userData);
-          localStorage.setItem('verdant_user', JSON.stringify(userData));
-          resolve(userData);
-        } else {
-          reject(new Error('All fields are required'));
-        }
-      }, 800);
+  const signup = async (name, email, password) => {
+    await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
+      fullName: name,
+      email,
+      password,
+      profileImgUrl: '',
     });
+    // Auto-login after successful registration
+    return login(email, password);
   };
 
   const logout = () => {
-    setUser(null);
+    localStorage.removeItem('token');
     localStorage.removeItem('verdant_user');
+    setUser(null);
   };
 
   if (loading) {
@@ -63,7 +62,7 @@ export function AuthProvider({ children }) {
       <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 rounded-2xl gradient-primary animate-pulse" />
-          <p className="text-on-surface-variant text-sm font-medium">Loading...</p>
+          <p className="text-on-surface-variant text-sm font-medium">Loading Verdant...</p>
         </div>
       </div>
     );
