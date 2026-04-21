@@ -13,24 +13,9 @@ import dashboardRoutes from './routes/dashboardRoutes.js'
 const app = express()
 
 app.use(cors({
-  origin: (origin, callback) => {
-    // في ملف Backend/src/server.js
-app.use(cors({
   // ده هيسمح لأي فرونت إند يكلم السيرفر بدون مشاكل
   origin: function (origin, callback) {
     callback(null, true);
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-}));
-
-    // Allow requests with no origin (mobile apps, curl, etc.)
-    if (!origin || allowed.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
