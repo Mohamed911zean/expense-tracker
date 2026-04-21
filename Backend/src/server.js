@@ -12,19 +12,24 @@ import dashboardRoutes from './routes/dashboardRoutes.js'
 
 const app = express()
 
-// Handle preflight requests FIRST, before anything else
-app.options('(.*)', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-  res.sendStatus(200)
-})
-
-app.use(cors({
+const corsOptions = {
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-}))
+}
+
+app.use(cors(corsOptions))
+
+// This is the correct way to handle preflight in Express 5
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    return res.sendStatus(200)
+  }
+  next()
+})
 
 app.use(express.json())
 
