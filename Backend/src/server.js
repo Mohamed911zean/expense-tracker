@@ -12,25 +12,29 @@ import dashboardRoutes from './routes/dashboardRoutes.js'
 
 const app = express()
 
+// Handle preflight requests FIRST, before anything else
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  res.sendStatus(200)
+})
+
 app.use(cors({
-  // ده هيسمح لأي فرونت إند يكلم السيرفر بدون مشاكل
-  origin: function (origin, callback) {
-    callback(null, true);
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-}));
+}))
 
 app.use(express.json())
 
 connectDB()
 
-app.use("/api/v1/auth" , authRoutes)
-app.use("/api/v1/income" , incomeRoutes)
-app.use("/api/v1/expense" , expenseRoutes)
-app.use("/api/v1/aqusetions" , aqusetionsRoutes)
-app.use("/api/v1/dashboard" , dashboardRoutes)
+app.use("/api/v1/auth", authRoutes)
+app.use("/api/v1/income", incomeRoutes)
+app.use("/api/v1/expense", expenseRoutes)
+app.use("/api/v1/aqusetions", aqusetionsRoutes)
+app.use("/api/v1/dashboard", dashboardRoutes)
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, "0.0.0.0", () => console.log("server running on port:", PORT))
