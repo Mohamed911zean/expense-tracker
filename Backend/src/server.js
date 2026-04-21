@@ -32,7 +32,6 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.json())
-app.options("*", cors());
 
 console.log("Origin:", origin);
 connectDB()
