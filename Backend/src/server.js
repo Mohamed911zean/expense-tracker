@@ -31,9 +31,9 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
+
 app.use(express.json())
 
-console.log("Origin:", origin);
 connectDB()
 
 app.use("/api/v1/auth" , authRoutes)
