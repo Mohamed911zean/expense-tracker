@@ -13,7 +13,7 @@ import dashboardRoutes from './routes/dashboardRoutes.js'
 const app = express()
 
 // Handle preflight requests FIRST, before anything else
-app.options('*', (req, res) => {
+app.options('(.*)', (req, res) => {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
