@@ -15,12 +15,15 @@ const app = express()
 app.use(cors({
   origin: (origin, callback) => {
     // في ملف Backend/src/server.js
-const allowed = [
-  process.env.CLIENT_URL,
-  'http://localhost:5173',
-  'http://localhost:3000',
-  'https://expense-tracker-peach-ten.vercel.app' // حط الرابط ده مباشرة كدا هنا
-].filter(Boolean);
+app.use(cors({
+  // ده هيسمح لأي فرونت إند يكلم السيرفر بدون مشاكل
+  origin: function (origin, callback) {
+    callback(null, true);
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+}));
 
     // Allow requests with no origin (mobile apps, curl, etc.)
     if (!origin || allowed.includes(origin)) {
