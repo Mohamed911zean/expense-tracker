@@ -20,18 +20,13 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 
-// This is the correct way to handle preflight in Express 5
-app.use((req, res, next) => {
-  if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Origin', '*')
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-    return res.sendStatus(200)
-  }
-  next()
-})
+
 
 app.use(express.json())
+
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", message: "Backend is running" });
+});
 
 connectDB()
 
