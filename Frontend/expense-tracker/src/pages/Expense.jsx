@@ -29,6 +29,7 @@ export default function Expense() {
   const totalExpenses = getTotalExpenses();
   const avgExpense = expenseList.length ? (totalExpenses / expenseList.length) : 0;
   const categoryData = getCategoryBreakdown('expense');
+  const categoriesCount = categoryData.length;
 
   const handleAdd = async (e) => {
     e.preventDefault();
@@ -97,19 +98,20 @@ export default function Expense() {
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         <StatCard
-          title="Total Expenses"
+          title={t('dashboard.totalExpense')}
           value={`$${totalExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
-          icon={<MdTrendingDown />}
+          icon={<span className="text-base">📉</span>}
+          className="md:col-span-1"
         />
         <StatCard
-          title="Transactions"
-          value={expenseList.length}
-          subtitle="This month"
+          title={t('expense.categories')}
+          value={categoriesCount}
+          subtitle={t('expense.activeCategories')}
         />
         <StatCard
-          title="Average Spend"
+          title={t('expense.avgPerCategory')}
           value={`$${avgExpense.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
-          subtitle="Per transaction"
+          subtitle={t('income.monthlyAvg')}
         />
       </div>
 
@@ -125,18 +127,15 @@ export default function Expense() {
               <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-lg">
                 <MdLightbulb className="text-on-primary text-lg" />
               </div>
-              <h3 className="text-on-surface text-base font-bold text-tracking-tight">Curator Insight</h3>
+              <h3 className="text-on-surface text-base font-bold text-tracking-tight">{t('expense.insightTitle')}</h3>
             </div>
             <p className="text-on-surface text-sm leading-relaxed font-medium">
-              Your lifestyle spending is <span className="text-primary font-bold">12% higher</span> than
-              last month. Consider reviewing your subscription services for potential savings.
+              {t('expense.insightText')}
             </p>
             <div className="mt-auto pt-6">
               <div className="p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
                 <p className="text-on-surface-variant text-xs italic leading-relaxed">
-                  "Intentionality is the new currency." — Your entertainment budget has increased by 22%,
-                  primarily driven by streaming subscriptions. Verdant suggests consolidating services
-                  to save $450 annually.
+                  {t('expense.insightQuote')}
                 </p>
               </div>
             </div>
@@ -144,26 +143,28 @@ export default function Expense() {
         </div>
       </div>
 
-      {/* Expense list */}
+      {/* Expense List */}
       {loading ? (
         <TransactionSkeleton count={5} />
       ) : (
         <TransactionList
           transactions={expenseList}
           onDelete={handleDelete}
-          title="Recent Expenses"
-          emptyMessage="No expenses recorded yet."
+          title={t('expense.recent')}
+          emptyMessage={t('expense.empty')}
         />
       )}
 
       {/* Global FAB */}
-      <button
-        onClick={() => setShowAddModal(true)}
-        className="fixed bottom-20 right-4 md:bottom-12 md:right-12 w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center z-50 transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
-        title={t('expense.addExpense')}
-      >
-        <MdAdd className="text-2xl md:text-3xl" />
-      </button>
+      <div className="fixed bottom-24 start-0 end-0 flex justify-center pointer-events-none z-[90] md:bottom-12 md:end-12 md:start-auto md:justify-end">
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="w-14 h-14 md:w-16 md:h-16 rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center pointer-events-auto transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
+          title={t('expense.addExpense')}
+        >
+          <MdAdd className="text-2xl md:text-3xl" />
+        </button>
+      </div>
 
       {/* Add Expense Modal */}
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title={t('expense.addExpense')}>

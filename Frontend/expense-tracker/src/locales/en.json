@@ -4,6 +4,7 @@
     "income": "Income",
     "expense": "Expense",
     "acquisitions": "Acquisitions",
+    "settings": "Settings",
     "logout": "Logout"
   },
   "dashboard": {
@@ -11,7 +12,7 @@
     "subtitle": "Your financial overview at a glance",
     "totalIncome": "Total Income",
     "totalExpense": "Total Expenses",
-    "balance": "Balance",
+    "balance": "Available Balance",
     "recentTransactions": "Recent Transactions",
     "addTransaction": "Add Transaction",
     "export": "Export"
@@ -19,17 +20,52 @@
   "income": {
     "title": "Portfolio Yield",
     "subtitle": "Monthly recurring revenue overview",
-    "addIncome": "Add Income"
+    "addIncome": "Add Income",
+    "sources": "Income Sources",
+    "activeStreams": "Active revenue streams",
+    "avgPerSource": "Average Per Source",
+    "monthlyAvg": "Monthly average",
+    "empty": "No income sources added yet. Start building your portfolio."
   },
   "expense": {
     "title": "Expenses",
     "subtitle": "Total expenses this month",
-    "addExpense": "Add Expense"
+    "addExpense": "Add Expense",
+    "categories": "Categories Used",
+    "activeCategories": "Active spending areas",
+    "avgPerCategory": "Average Per Category",
+    "highestExpense": "Highest Expense",
+    "empty": "No expenses recorded yet. Track your spending.",
+    "recent": "Recent Expenses",
+    "insightTitle": "Curator Insight",
+    "insightText": "Your lifestyle spending is 12% higher than last month. Consider reviewing your subscription services for potential savings.",
+    "insightQuote": "\"Intentionality is the new currency.\" — Your entertainment budget has increased by 22%, primarily driven by streaming subscriptions. Verdant suggests consolidating services to save $450 annually."
   },
   "acquisitions": {
     "title": "Acquisitions",
     "subtitle": "Curated milestones and luxury asset tracking",
-    "addGoal": "Add Goal"
+    "addGoal": "Add Goal",
+    "activeGoals": "Active Goals",
+    "inProgress": "In progress",
+    "totalValue": "Total Value",
+    "targetValue": "Target portfolio value",
+    "avgProgress": "Average Progress",
+    "overallCompletion": "Overall completion",
+    "empty": "No acquisition goals yet. Set your next target."
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account and preferences",
+    "userInfo": "User Information",
+    "name": "Name",
+    "email": "Email Address"
+  },
+  "charts": {
+    "cashFlow": "Monthly Cash Flow",
+    "monthlyFlow": "Visualizing your monthly cash flow",
+    "expenseDist": "Expense Distribution",
+    "spendingByCategory": "Spending by Category",
+    "lifestyleFlow": "Visualizing your lifestyle flow"
   },
   "common": {
     "save": "Save",

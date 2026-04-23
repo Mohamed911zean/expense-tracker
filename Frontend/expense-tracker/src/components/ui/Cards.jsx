@@ -41,7 +41,10 @@ export function StatCard({ title, value, subtitle, icon, trend, className = '', 
   );
 }
 
+import { useTranslation } from 'react-i18next';
+
 export function BalanceCard({ balance, income, expenses, variant = 'default' }) {
+  const { t } = useTranslation();
   const bgStyles = {
     default: 'bg-primary text-on-primary',
     gradient: 'bg-gradient-to-br from-primary to-primary-container text-on-primary',
@@ -51,7 +54,7 @@ export function BalanceCard({ balance, income, expenses, variant = 'default' }) 
     <div className={`rounded-3xl p-6 ${bgStyles[variant]} relative overflow-hidden flex flex-col justify-between group transition-smooth`}>
       <div className="relative z-10">
         <p className="text-white/90 text-xs font-medium uppercase text-tracking-wide mb-2">
-          Available Balance
+          {t('dashboard.balance')}
         </p>
         <h2 className="text-3xl md:text-4xl font-bold text-tracking-tight mb-6">
           ${balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
@@ -60,7 +63,7 @@ export function BalanceCard({ balance, income, expenses, variant = 'default' }) 
         <div className="flex flex-wrap items-center gap-4 md:gap-6 mt-4 md:mt-0">
           <div className="min-w-0">
             <p className="text-white/90 text-[10px] md:text-xs font-medium uppercase text-tracking-wide mb-1 truncate">
-              Income
+              {t('nav.income')}
             </p>
             <p className="text-base md:text-lg font-semibold truncate">
               ${income.toLocaleString('en-US', { maximumFractionDigits: 0 })}
@@ -69,7 +72,7 @@ export function BalanceCard({ balance, income, expenses, variant = 'default' }) 
           <div className="w-px h-8 bg-white/30" />
           <div className="min-w-0">
             <p className="text-white/90 text-[10px] md:text-xs font-medium uppercase text-tracking-wide mb-1 truncate">
-              Expenses
+              {t('nav.expense')}
             </p>
             <p className="text-base md:text-lg font-semibold truncate">
               ${expenses.toLocaleString('en-US', { maximumFractionDigits: 0 })}

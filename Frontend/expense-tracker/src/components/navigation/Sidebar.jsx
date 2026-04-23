@@ -1,6 +1,6 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { MdDashboard, MdPayments, MdReceiptLong, MdLogout, MdOutlineWorkspacePremium, MdLanguage } from 'react-icons/md';
+import { MdDashboard, MdPayments, MdReceiptLong, MdSettings, MdOutlineWorkspacePremium, MdLanguage } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 
 const navItems = [
@@ -11,14 +11,8 @@ const navItems = [
 ];
 
 export default function Sidebar() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const { t, i18n } = useTranslation();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   const toggleLanguage = () => {
     i18n.changeLanguage(i18n.language === 'en' ? 'ar' : 'en');
@@ -63,17 +57,8 @@ export default function Sidebar() {
           </div>
         </nav>
 
-        {/* User section */}
-        <div className="px-4 pb-6 space-y-2">
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-surface-container-low">
-            <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border border-outline-variant/20 flex items-center justify-center bg-surface-container-high text-on-surface-variant font-bold text-sm">
-              {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-on-surface text-sm font-semibold truncate">{user?.name || 'User'}</p>
-              <p className="text-on-surface-variant text-xs truncate">{user?.email || ''}</p>
-            </div>
-          </div>
+        {/* Settings & Language */}
+        <div className="px-4 pb-6 space-y-2 mt-auto">
           <div className="flex gap-2">
             <button
               onClick={toggleLanguage}
@@ -82,12 +67,16 @@ export default function Sidebar() {
               <MdLanguage className="text-xl shrink-0" />
               <span>{i18n.language === 'en' ? 'العربية' : 'EN'}</span>
             </button>
-            <button
-              onClick={handleLogout}
-              className="flex items-center justify-center gap-2 p-3 rounded-xl text-sm font-medium text-error hover:bg-error-container transition-smooth flex-1 cursor-pointer"
+            <NavLink
+              to="/settings"
+              className={({ isActive }) => 
+                `flex items-center justify-center gap-2 p-3 rounded-xl text-sm font-medium transition-smooth flex-1 cursor-pointer ${
+                  isActive ? 'bg-surface-container-high text-primary' : 'text-on-surface-variant hover:bg-surface-container-low'
+                }`
+              }
             >
-              <MdLogout className="text-xl shrink-0" />
-            </button>
+              <MdSettings className="text-xl shrink-0" />
+            </NavLink>
           </div>
         </div>
       </aside>
@@ -105,9 +94,9 @@ export default function Sidebar() {
             <button onClick={toggleLanguage} className="w-9 h-9 rounded-full flex items-center justify-center bg-surface-container text-on-surface-variant font-bold text-xs shadow-sm hover:text-primary transition-smooth cursor-pointer">
               {i18n.language === 'en' ? 'AR' : 'EN'}
             </button>
-            <div className="w-9 h-9 rounded-full overflow-hidden border border-outline-variant/20 flex items-center justify-center bg-surface-container-high text-on-surface-variant font-bold text-xs shadow-sm cursor-pointer" onClick={handleLogout}>
-              {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
-            </div>
+            <NavLink to="/settings" className={({ isActive }) => `w-9 h-9 rounded-full flex items-center justify-center bg-surface-container-high font-bold text-lg shadow-sm transition-smooth cursor-pointer ${isActive ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}>
+              <MdSettings />
+            </NavLink>
           </div>
         </div>
       </header>

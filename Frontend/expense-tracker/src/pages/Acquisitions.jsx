@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { MdAdd, MdAccountBalanceWallet, MdOutlineWorkspacePremium, MdDelete } from 'react-icons/md';
+import { MdAdd, MdTrendingUp, MdOutlineWorkspacePremium, MdDelete } from 'react-icons/md';
 import useTransactionStore from '../store/useTransactionStore';
 import { StatCard } from '../components/ui/Cards';
 import { Modal, Button, Input } from '../components/ui/FormElements';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 function getInitialColor(name) {
   const colors = [
@@ -24,6 +25,7 @@ export default function Acquisitions() {
 
   const totalTarget = acquisitions.reduce((sum, item) => sum + (item.target || 0), 0);
   const totalSaved = acquisitions.reduce((sum, item) => sum + (item.saved || 0), 0);
+  const avgProgress = totalTarget > 0 ? ((totalSaved / totalTarget) * 100).toFixed(1) : 0;
 
   const handleAdd = async (e) => {
     e.preventDefault();
@@ -75,16 +77,22 @@ export default function Acquisitions() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         <StatCard
-          title="Total Allocated Funds"
-          value={`$${totalSaved.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
-          icon={<MdAccountBalanceWallet />}
+          title={t('acquisitions.activeGoals')}
+          value={acquisitions.length}
+          subtitle={t('acquisitions.inProgress')}
+          icon={<MdTrendingUp />}
         />
         <StatCard
-          title="Portfolio Target"
+          title={t('acquisitions.totalValue')}
           value={`$${totalTarget.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
-          icon={<MdOutlineWorkspacePremium />}
+          subtitle={t('acquisitions.targetValue')}
+        />
+        <StatCard
+          title={t('acquisitions.avgProgress')}
+          value={`${avgProgress}%`}
+          subtitle={t('acquisitions.overallCompletion')}
         />
       </div>
 
@@ -94,7 +102,7 @@ export default function Acquisitions() {
           <div className="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center mx-auto mb-4">
             <MdOutlineWorkspacePremium className="text-2xl text-on-surface-variant" />
           </div>
-          <p className="text-on-surface-variant text-sm">No acquisition goals yet. Create your first milestone.</p>
+          <p className="text-on-surface-variant text-sm">{t('acquisitions.empty')}</p>
         </div>
       )}
 
@@ -140,7 +148,7 @@ export default function Acquisitions() {
                     className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold bg-surface-container-low text-on-surface-variant hover:bg-error-container hover:text-error transition-smooth cursor-pointer border border-outline-variant/10"
                   >
                     <MdDelete className="text-base" />
-                    Remove Goal
+                    {t('common.delete', 'Remove Goal')}
                   </button>
                 </div>
               </div>
@@ -150,13 +158,15 @@ export default function Acquisitions() {
       )}
 
       {/* Global FAB */}
-      <button
-        onClick={() => setShowAddModal(true)}
-        className="fixed bottom-20 right-4 md:bottom-12 md:right-12 w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center z-[90] transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
-        title={t('acquisitions.addGoal')}
-      >
-        <MdAdd className="text-2xl md:text-3xl" />
-      </button>
+      <div className="fixed bottom-24 start-0 end-0 flex justify-center pointer-events-none z-[90] md:bottom-12 md:end-12 md:start-auto md:justify-end">
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="w-14 h-14 md:w-16 md:h-16 rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center pointer-events-auto transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
+          title={t('acquisitions.addGoal')}
+        >
+          <MdAdd className="text-2xl md:text-3xl" />
+        </button>
+      </div>
 
       {/* Add Goal Modal */}
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title={t('acquisitions.addGoal')}>

@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Income from './pages/Income';
 import Expense from './pages/Expense';
 import Acquisitions from './pages/Acquisitions';
+import Settings from './pages/Settings';
 import TransactionDetail from './pages/TransactionDetail';
 import DashboardLayout from './components/layouts/DashboardLayout';
 
@@ -55,6 +56,7 @@ function App() {
             <Route path="income" element={<Income />} />
             <Route path="expense" element={<Expense />} />
             <Route path="acquisitions" element={<Acquisitions />} />
+            <Route path="settings" element={<Settings />} />
             <Route path="transaction/:id" element={<TransactionDetail />} />
           </Route>
           <Route path="*" element={<Navigate to="/dashboard" replace />} />

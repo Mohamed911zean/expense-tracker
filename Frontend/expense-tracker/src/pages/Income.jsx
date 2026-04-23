@@ -95,20 +95,20 @@ export default function Income() {
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         <StatCard
-          title="Total Income"
+          title={t('dashboard.totalIncome')}
           value={`$${totalIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
           icon={<MdTrendingUp />}
           className="md:col-span-1"
         />
         <StatCard
-          title="Income Sources"
+          title={t('income.sources')}
           value={incomeList.length}
-          subtitle="Active revenue streams"
+          subtitle={t('income.activeStreams')}
         />
         <StatCard
-          title="Average Per Source"
+          title={t('income.avgPerSource')}
           value={`$${avgIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
-          subtitle="Monthly average"
+          subtitle={t('income.monthlyAvg')}
         />
       </div>
 
@@ -119,19 +119,21 @@ export default function Income() {
         <TransactionList
           transactions={incomeList}
           onDelete={handleDelete}
-          title="Income Streams"
-          emptyMessage="No income sources added yet. Start building your portfolio."
+          title={t('income.sources')}
+          emptyMessage={t('income.empty')}
         />
       )}
 
       {/* Global FAB */}
-      <button
-        onClick={() => setShowAddModal(true)}
-        className="fixed bottom-20 right-4 md:bottom-12 md:right-12 w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center z-50 transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
-        title={t('income.addIncome')}
-      >
-        <MdAdd className="text-2xl md:text-3xl" />
-      </button>
+      <div className="fixed bottom-24 start-0 end-0 flex justify-center pointer-events-none z-[90] md:bottom-12 md:end-12 md:start-auto md:justify-end">
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="w-14 h-14 md:w-16 md:h-16 rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center pointer-events-auto transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
+          title={t('income.addIncome')}
+        >
+          <MdAdd className="text-2xl md:text-3xl" />
+        </button>
+      </div>
 
       {/* Add Income Modal */}
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title={t('income.addIncome')}>

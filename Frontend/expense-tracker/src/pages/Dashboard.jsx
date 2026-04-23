@@ -177,13 +177,15 @@ export default function Dashboard() {
       )}
 
       {/* Global FAB */}
-      <button
-        onClick={() => setShowAddModal(true)}
-        className="fixed bottom-20 right-4 md:bottom-12 md:right-12 w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center z-[90] transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
-        title={t('dashboard.addTransaction')}
-      >
-        <MdAdd className="text-2xl md:text-3xl" />
-      </button>
+      <div className="fixed bottom-24 start-0 end-0 flex justify-center pointer-events-none z-[90] md:bottom-12 md:end-12 md:start-auto md:justify-end">
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="w-14 h-14 md:w-16 md:h-16 rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center pointer-events-auto transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
+          title={t('dashboard.addTransaction')}
+        >
+          <MdAdd className="text-2xl md:text-3xl" />
+        </button>
+      </div>
 
       {/* Add Transaction Modal */}
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title={t('dashboard.addTransaction')}>

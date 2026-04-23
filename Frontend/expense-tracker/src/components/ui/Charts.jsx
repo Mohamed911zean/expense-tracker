@@ -2,6 +2,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell
 } from 'recharts';
+import { useTranslation } from 'react-i18next';
 
 const CHART_COLORS = ['#026e00', '#1dde13', '#0fa60a', '#6df561', '#a4fb9b', '#d0fdca', '#8f4959', '#bbccb1'];
 
@@ -20,11 +21,12 @@ function CustomTooltip({ active, payload, label }) {
 }
 
 export function SpendingChart({ data }) {
+  const { t } = useTranslation();
   return (
     <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-malachite">
       <div className="mb-6">
-        <h3 className="text-on-surface text-base font-bold">Spending Trends</h3>
-        <p className="text-on-surface-variant text-xs mt-1">Visualizing your monthly cash flow</p>
+        <h3 className="text-on-surface text-base font-bold">{t('charts.cashFlow')}</h3>
+        <p className="text-on-surface-variant text-xs mt-1">{t('charts.monthlyFlow')}</p>
       </div>
       <div className="h-64 md:h-72">
         <ResponsiveContainer width="100%" height="100%">
@@ -80,14 +82,15 @@ export function SpendingChart({ data }) {
   );
 }
 
-export function CategoryChart({ data, title = 'Spending by Category', subtitle = 'Visualizing your lifestyle flow' }) {
+export function CategoryChart({ data, titleKey = 'charts.spendingByCategory', subtitleKey = 'charts.lifestyleFlow' }) {
+  const { t } = useTranslation();
   const total = data.reduce((sum, d) => sum + d.amount, 0);
 
   return (
     <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-malachite">
       <div className="mb-6">
-        <h3 className="text-on-surface text-base font-bold">{title}</h3>
-        <p className="text-on-surface-variant text-xs mt-1">{subtitle}</p>
+        <h3 className="text-on-surface text-base font-bold">{t(titleKey)}</h3>
+        <p className="text-on-surface-variant text-xs mt-1">{t(subtitleKey)}</p>
       </div>
       <div className="flex flex-col md:flex-row items-center gap-6">
         <div className="w-48 h-48 shrink-0">
