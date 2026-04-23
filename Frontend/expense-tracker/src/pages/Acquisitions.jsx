@@ -61,7 +61,8 @@ export default function Acquisitions() {
   };
 
   return (
-    <div className="space-y-6 md:space-y-8 animate-fade-in pb-20 lg:pb-0">
+    <>
+      <div className="space-y-6 md:space-y-8 animate-fade-in pb-24 lg:pb-0">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -157,16 +158,18 @@ export default function Acquisitions() {
         </div>
       )}
 
-      {/* Global FAB */}
-      <div className="fixed bottom-24 start-0 end-0 flex justify-center pointer-events-none z-[90] md:bottom-12 md:end-12 md:start-auto md:justify-end">
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="w-14 h-14 md:w-16 md:h-16 rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center pointer-events-auto transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
-          title={t('acquisitions.addGoal')}
-        >
-          <MdAdd className="text-2xl md:text-3xl" />
-        </button>
       </div>
+
+      {/* Global FAB */}
+     <div className="fixed bottom-24 end-6 z-[90] pointer-events-none">
+  <button
+    onClick={() => setShowAddModal(true)}
+    className="w-14 h-14 md:w-16 md:h-16 rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center pointer-events-auto transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
+    title={t('dashboard.addTransaction')}
+  >
+    <MdAdd className="text-2xl md:text-3xl" />
+  </button>
+</div>
 
       {/* Add Goal Modal */}
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title={t('acquisitions.addGoal')}>
@@ -203,6 +206,6 @@ export default function Acquisitions() {
           </div>
         </form>
       </Modal>
-    </div>
+    </>
   );
 }

@@ -105,87 +105,90 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="space-y-6 md:space-y-8 animate-fade-in">
-      {/* Page header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-on-surface text-2xl md:text-3xl font-bold text-tracking-tight">
-            {t('dashboard.title')}
-          </h1>
-          <p className="text-on-surface-variant text-sm mt-1">
-            {t('dashboard.subtitle')}
-          </p>
+    <>
+      <div className="space-y-6 md:space-y-8 animate-fade-in pb-24 lg:pb-0">
+        {/* Page header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-on-surface text-2xl md:text-3xl font-bold text-tracking-tight">
+              {t('dashboard.title')}
+            </h1>
+            <p className="text-on-surface-variant text-sm mt-1">
+              {t('dashboard.subtitle')}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => handleDownload('income')}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/20 text-on-surface-variant text-xs font-medium hover:text-primary transition-smooth cursor-pointer"
+            >
+              <MdDownload className="text-base" /> {t('nav.income')}
+            </button>
+            <button
+              onClick={() => handleDownload('expense')}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/20 text-on-surface-variant text-xs font-medium hover:text-primary transition-smooth cursor-pointer"
+            >
+              <MdDownload className="text-base" /> {t('nav.expense')}
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => handleDownload('income')}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/20 text-on-surface-variant text-xs font-medium hover:text-primary transition-smooth cursor-pointer"
-          >
-            <MdDownload className="text-base" /> {t('nav.income')}
-          </button>
-          <button
-            onClick={() => handleDownload('expense')}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/20 text-on-surface-variant text-xs font-medium hover:text-primary transition-smooth cursor-pointer"
-          >
-            <MdDownload className="text-base" /> {t('nav.expense')}
-          </button>
-        </div>
-      </div>
 
-      {/* Balance + Stats row */}
-      {dashLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-surface-container-lowest rounded-2xl p-6 h-36 skeleton" />
-          ))}
+        {/* Balance + Stats row */}
+        {dashLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="bg-surface-container-lowest rounded-2xl p-6 h-36 skeleton" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            <BalanceCard balance={balance} income={totalIncome} expenses={totalExpense} />
+            <StatCard
+              title={t('dashboard.totalIncome')}
+              value={`$${totalIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
+              icon={<MdTrendingUp />}
+            />
+            <StatCard
+              title={t('dashboard.totalExpense')}
+              value={`$${totalExpense.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
+              icon={<span className="text-base">📉</span>}
+            />
+          </div>
+        )}
+
+        {/* Charts row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+          <SpendingChart data={monthlyData} />
+          <CategoryChart data={categoryData} />
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-          <BalanceCard balance={balance} income={totalIncome} expenses={totalExpense} />
-          <StatCard
-            title={t('dashboard.totalIncome')}
-            value={`$${totalIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
-            icon={<MdTrendingUp />}
+
+        {/* Recent Transactions */}
+        {loading ? (
+          <TransactionSkeleton count={5} />
+        ) : (
+          <TransactionList
+            transactions={recentTransactions}
+            onDelete={(id) => {
+              const t = recentTransactions.find((r) => r.id === id);
+              if (t) handleDelete(id, t.type);
+            }}
+            title={t('dashboard.recentTransactions')}
+            emptyMessage="No transactions yet. Start by adding income or expenses."
           />
-          <StatCard
-            title={t('dashboard.totalExpense')}
-            value={`$${totalExpense.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
-            icon={<span className="text-base">📉</span>}
-          />
-        </div>
-      )}
+        )}
 
-      {/* Charts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-        <SpendingChart data={monthlyData} />
-        <CategoryChart data={categoryData} />
       </div>
-
-      {/* Recent Transactions */}
-      {loading ? (
-        <TransactionSkeleton count={5} />
-      ) : (
-        <TransactionList
-          transactions={recentTransactions}
-          onDelete={(id) => {
-            const t = recentTransactions.find((r) => r.id === id);
-            if (t) handleDelete(id, t.type);
-          }}
-          title={t('dashboard.recentTransactions')}
-          emptyMessage="No transactions yet. Start by adding income or expenses."
-        />
-      )}
 
       {/* Global FAB */}
-      <div className="fixed bottom-24 start-0 end-0 flex justify-center pointer-events-none z-[90] md:bottom-12 md:end-12 md:start-auto md:justify-end">
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="w-14 h-14 md:w-16 md:h-16 rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center pointer-events-auto transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
-          title={t('dashboard.addTransaction')}
-        >
-          <MdAdd className="text-2xl md:text-3xl" />
-        </button>
-      </div>
+      <div className="fixed bottom-24 end-6 z-[90] pointer-events-none">
+  <button
+    onClick={() => setShowAddModal(true)}
+    className="w-14 h-14 md:w-16 md:h-16 rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center pointer-events-auto transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
+    title={t('dashboard.addTransaction')}
+  >
+    <MdAdd className="text-2xl md:text-3xl" />
+  </button>
+</div>
 
       {/* Add Transaction Modal */}
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title={t('dashboard.addTransaction')}>
@@ -197,11 +200,10 @@ export default function Dashboard() {
                 key={t}
                 type="button"
                 onClick={() => setFormData({ ...formData, type: t })}
-                className={`py-3 rounded-xl text-sm font-semibold transition-smooth capitalize cursor-pointer ${
-                  formData.type === t
-                    ? 'gradient-primary text-on-primary'
-                    : 'bg-surface-container-low text-on-surface-variant'
-                }`}
+                className={`py-3 rounded-xl text-sm font-semibold transition-smooth capitalize cursor-pointer ${formData.type === t
+                  ? 'gradient-primary text-on-primary'
+                  : 'bg-surface-container-low text-on-surface-variant'
+                  }`}
               >
                 {t}
               </button>
@@ -260,6 +262,6 @@ export default function Dashboard() {
           </div>
         </form>
       </Modal>
-    </div>
+    </>
   );
 }

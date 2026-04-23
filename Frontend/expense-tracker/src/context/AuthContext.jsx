@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 import { API_PATHS } from '../utils/pathApi';
 
+
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -60,11 +61,30 @@ export function AuthProvider({ children }) {
   if (loading) {
     return (
       <div className="min-h-screen bg-surface flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl gradient-primary animate-pulse" />
-          <p className="text-on-surface-variant text-sm font-medium">Loading Verdant...</p>
-        </div>
+  <div className="flex flex-col items-center gap-6">
+    
+    {/* Logo / Spinner */}
+    <div className="relative w-14 h-14">
+  <div className="absolute inset-0 rounded-full border-4 border-primary/20"></div>
+  <div className="absolute inset-0 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
+</div>
+
+    {/* Text */}
+    <div className="text-center">
+      <p className="text-on-surface font-semibold tracking-wide">
+        Loading Verdant
+      </p>
+
+      {/* dots animation */}
+      <div className="flex justify-center gap-1 mt-2">
+        <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+        <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+        <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce"></span>
       </div>
+    </div>
+
+  </div>
+</div>
     );
   }
 

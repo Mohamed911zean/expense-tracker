@@ -35,7 +35,7 @@ export default function Settings() {
             </div>
             <div>
               <p className="text-on-surface-variant text-xs uppercase tracking-wider font-semibold mb-1">{t('settings.name', 'Name')}</p>
-              <p className="text-on-surface font-semibold">{user?.name || 'User'}</p>
+              <p className="text-on-surface font-semibold">{user?.fullName || 'User'}</p>
             </div>
           </div>
 
