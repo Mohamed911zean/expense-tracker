@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useTransactions } from '../context/TransactionContext';
+import useTransactionStore from '../store/useTransactionStore';
 import { MdArrowBack, MdTrendingUp, MdTrendingDown, MdDelete, MdReceiptLong, MdCategory, MdInfoOutline } from 'react-icons/md';
 
 function getCategoryColor(category) {
@@ -27,8 +27,9 @@ function formatDate(dateStr) {
 export default function TransactionDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { transactions, deleteTransaction } = useTransactions();
+  const { getAllTransactions, deleteTransaction } = useTransactionStore();
 
+  const transactions = getAllTransactions();
   const transaction = transactions.find((t) => t.id === id);
 
   if (!transaction) {

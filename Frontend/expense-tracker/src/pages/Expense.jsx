@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MdAdd, MdTrendingDown, MdLightbulb, MdDownload } from 'react-icons/md';
-import { useTransactions } from '../context/TransactionContext';
+import useTransactionStore from '../store/useTransactionStore';
 import { StatCard } from '../components/ui/Cards';
 import { TransactionList, TransactionSkeleton } from '../components/ui/TransactionList';
 import { CategoryChart } from '../components/ui/Charts';
@@ -13,7 +13,7 @@ export default function Expense() {
     getExpenses, getTotalExpenses, getCategoryBreakdown,
     addExpense, deleteExpense, downloadExpense,
     loading,
-  } = useTransactions();
+  } = useTransactionStore();
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -82,7 +82,7 @@ export default function Expense() {
             Total expenses this month
           </p>
         </div>
-        <div className="hidden md:flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <button
             onClick={handleDownload}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/20 text-on-surface-variant text-xs font-medium hover:text-primary transition-smooth cursor-pointer"

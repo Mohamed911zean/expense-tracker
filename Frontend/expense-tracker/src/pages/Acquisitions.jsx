@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MdAdd, MdAccountBalanceWallet, MdOutlineWorkspacePremium, MdDelete } from 'react-icons/md';
-import { useTransactions } from '../context/TransactionContext';
+import useTransactionStore from '../store/useTransactionStore';
 import { StatCard } from '../components/ui/Cards';
 import { Modal, Button, Input } from '../components/ui/FormElements';
 import toast from 'react-hot-toast';
@@ -16,7 +16,7 @@ function getInitialColor(name) {
 }
 
 export default function Acquisitions() {
-  const { acquisitions, addAcquisition, deleteAcquisition, loading } = useTransactions();
+  const { acquisitions, addAcquisition, deleteAcquisition, loading } = useTransactionStore();
   const [showAddModal, setShowAddModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({ name: '', target: '', saved: '' });

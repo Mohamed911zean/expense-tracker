@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { MdAdd, MdTrendingUp, MdDownload } from 'react-icons/md';
-import { useTransactions } from '../context/TransactionContext';
+import useTransactionStore from '../store/useTransactionStore';
 import { BalanceCard, StatCard } from '../components/ui/Cards';
 import { TransactionList, TransactionSkeleton } from '../components/ui/TransactionList';
 import { SpendingChart, CategoryChart } from '../components/ui/Charts';
 import { Modal, Button, Input, Select } from '../components/ui/FormElements';
-import axiosInstance from '../utils/axiosInstance';
-import { API_PATHS } from '../utils/pathApi';
 import toast from 'react-hot-toast';
 import moment from 'moment';
 
@@ -16,11 +14,9 @@ export default function Dashboard() {
     getCategoryBreakdown, getMonthlyData,
     addIncome, addExpense, deleteIncome, deleteExpense,
     downloadIncome, downloadExpense,
-    loading,
-  } = useTransactions();
+    loading, dashData, dashLoading, fetchDashboard
+  } = useTransactionStore();
 
-  const [dashData, setDashData] = useState(null);
-  const [dashLoading, setDashLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -33,15 +29,6 @@ export default function Dashboard() {
 
   const categoryData = getCategoryBreakdown('expense');
   const monthlyData = getMonthlyData();
-
-  // Fetch dashboard summary
-  useEffect(() => {
-    axiosInstance
-      .get(API_PATHS.DASHBOARD.GET_DATA)
-      .then((res) => setDashData(res.data))
-      .catch(() => toast.error('Failed to load dashboard data'))
-      .finally(() => setDashLoading(false));
-  }, []);
 
   const balance = dashData?.totalBalance ?? getBalance();
   const totalIncome = dashData?.totalIncome ?? getTotalIncome();
@@ -85,8 +72,7 @@ export default function Dashboard() {
       setShowAddModal(false);
       setFormData({ type: 'expense', source: '', category: 'Lifestyle', amount: '', date: moment().format('YYYY-MM-DD') });
       // Refresh dashboard data
-      const res = await axiosInstance.get(API_PATHS.DASHBOARD.GET_DATA);
-      setDashData(res.data);
+      await fetchDashboard();
     } catch (err) {
       toast.error(err.response?.data?.message || 'Something went wrong');
     } finally {
@@ -100,8 +86,7 @@ export default function Dashboard() {
       if (type === 'income') await deleteIncome(id);
       else await deleteExpense(id);
       toast.success('Transaction removed');
-      const res = await axiosInstance.get(API_PATHS.DASHBOARD.GET_DATA);
-      setDashData(res.data);
+      await fetchDashboard();
     } catch (err) {
       toast.error(err.response?.data?.message || 'Delete failed');
     }
@@ -129,7 +114,7 @@ export default function Dashboard() {
             Your financial overview at a glance
           </p>
         </div>
-        <div className="hidden md:flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => handleDownload('income')}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/20 text-on-surface-variant text-xs font-medium hover:text-primary transition-smooth cursor-pointer"
