@@ -87,10 +87,6 @@ export default function Income() {
           >
             <MdDownload className="text-base" /> Export
           </button>
-          <Button onClick={() => setShowAddModal(true)}>
-            <MdAdd className="text-lg" />
-            Add Income
-          </Button>
         </div>
       </div>
 
@@ -126,12 +122,13 @@ export default function Income() {
         />
       )}
 
-      {/* Mobile FAB */}
+      {/* Global FAB */}
       <button
         onClick={() => setShowAddModal(true)}
-        className="md:hidden fixed bottom-20 right-4 w-14 h-14 rounded-2xl gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center z-40 transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
+        className="fixed bottom-20 right-4 md:bottom-12 md:right-12 w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center z-50 transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
+        title="Add Income"
       >
-        <MdAdd className="text-2xl" />
+        <MdAdd className="text-2xl md:text-3xl" />
       </button>
 
       {/* Add Income Modal */}
