@@ -36,5 +36,10 @@ app.use("/api/v1/expense", expenseRoutes)
 app.use("/api/v1/aqusetions", aqusetionsRoutes)
 app.use("/api/v1/dashboard", dashboardRoutes)
 
-const PORT = process.env.PORT || 5000
-app.listen(PORT, "0.0.0.0", () => console.log("server running on port:", PORT))
+const PORT = process.env.PORT || 5000;
+
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, "0.0.0.0", () => console.log("server running on port:", PORT));
+}
+
+export default app;
