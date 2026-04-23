@@ -6,8 +6,10 @@ import { TransactionList, TransactionSkeleton } from '../components/ui/Transacti
 import { Modal, Button, Input, Select } from '../components/ui/FormElements';
 import toast from 'react-hot-toast';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 export default function Income() {
+  const { t } = useTranslation();
   const {
     getIncome, getTotalIncome,
     addIncome, deleteIncome, downloadIncome,
@@ -74,10 +76,10 @@ export default function Income() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-on-surface text-2xl md:text-3xl font-bold text-tracking-tight">
-            Portfolio Yield
+            {t('income.title')}
           </h1>
           <p className="text-on-surface-variant text-sm mt-1">
-            Monthly recurring revenue overview
+            {t('income.subtitle')}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -85,7 +87,7 @@ export default function Income() {
             onClick={handleDownload}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/20 text-on-surface-variant text-xs font-medium hover:text-primary transition-smooth cursor-pointer"
           >
-            <MdDownload className="text-base" /> Export
+            <MdDownload className="text-base" /> {t('dashboard.export')}
           </button>
         </div>
       </div>
@@ -125,14 +127,14 @@ export default function Income() {
       {/* Global FAB */}
       <button
         onClick={() => setShowAddModal(true)}
-        className="fixed bottom-20 right-4 md:bottom-12 md:right-12 w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center z-[90] transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
-        title="Add Income"
+        className="fixed bottom-20 right-4 md:bottom-12 md:right-12 w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center z-50 transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
+        title={t('income.addIncome')}
       >
         <MdAdd className="text-2xl md:text-3xl" />
       </button>
 
       {/* Add Income Modal */}
-      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add Income">
+      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title={t('income.addIncome')}>
         <form onSubmit={handleAdd} className="space-y-5">
           <Input
             label="Source"
@@ -156,11 +158,11 @@ export default function Income() {
             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
           />
           <div className="flex gap-3 pt-2">
-            <Button type="button" variant="secondary" onClick={() => setShowAddModal(false)} className="flex-1">
-              Cancel
+            <Button type="button" variant="secondary" onClick={() => setShowAddModal(false)} className="flex-1 cursor-pointer">
+              {t('common.cancel')}
             </Button>
-            <Button type="submit" className="flex-1" disabled={submitting}>
-              {submitting ? 'Saving...' : 'Add Income'}
+            <Button type="submit" className="flex-1 cursor-pointer" disabled={submitting}>
+              {submitting ? 'Saving...' : t('common.save')}
             </Button>
           </div>
         </form>

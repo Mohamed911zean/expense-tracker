@@ -1,0 +1,40 @@
+{
+  "nav": {
+    "dashboard": "لوحة القيادة",
+    "income": "الدخل",
+    "expense": "المصروفات",
+    "acquisitions": "المقتنيات",
+    "logout": "تسجيل الخروج"
+  },
+  "dashboard": {
+    "title": "لوحة القيادة",
+    "subtitle": "لمحة عامة عن أموالك",
+    "totalIncome": "إجمالي الدخل",
+    "totalExpense": "إجمالي المصروفات",
+    "balance": "الرصيد",
+    "recentTransactions": "المعاملات الأخيرة",
+    "addTransaction": "إضافة معاملة",
+    "export": "تصدير"
+  },
+  "income": {
+    "title": "عائد المحفظة",
+    "subtitle": "نظرة عامة على الإيرادات الشهرية المتكررة",
+    "addIncome": "إضافة دخل"
+  },
+  "expense": {
+    "title": "المصروفات",
+    "subtitle": "إجمالي المصروفات هذا الشهر",
+    "addExpense": "إضافة مصروف"
+  },
+  "acquisitions": {
+    "title": "المقتنيات",
+    "subtitle": "تتبع الإنجازات والأصول الفاخرة",
+    "addGoal": "إضافة هدف"
+  },
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "language": "English"
+  }
+}

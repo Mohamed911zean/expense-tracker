@@ -16,6 +16,7 @@ function getInitialColor(name) {
 }
 
 export default function Acquisitions() {
+  const { t } = useTranslation();
   const { acquisitions, addAcquisition, deleteAcquisition, loading } = useTransactionStore();
   const [showAddModal, setShowAddModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -63,10 +64,10 @@ export default function Acquisitions() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-on-surface text-2xl md:text-3xl font-bold text-tracking-tight">
-            Acquisitions
+            {t('acquisitions.title')}
           </h1>
           <p className="text-on-surface-variant text-sm mt-1">
-            Curated milestones and luxury asset tracking
+            {t('acquisitions.subtitle')}
           </p>
         </div>
         <div className="hidden md:block">
@@ -152,13 +153,13 @@ export default function Acquisitions() {
       <button
         onClick={() => setShowAddModal(true)}
         className="fixed bottom-20 right-4 md:bottom-12 md:right-12 w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center z-[90] transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
-        title="Add Goal"
+        title={t('acquisitions.addGoal')}
       >
         <MdAdd className="text-2xl md:text-3xl" />
       </button>
 
       {/* Add Goal Modal */}
-      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="New Acquisition Goal">
+      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title={t('acquisitions.addGoal')}>
         <form onSubmit={handleAdd} className="space-y-4">
           <Input
             label="Goal Name"
@@ -184,10 +185,10 @@ export default function Acquisitions() {
           />
           <div className="flex gap-3 pt-4">
             <Button type="button" variant="secondary" onClick={() => setShowAddModal(false)} className="flex-1">
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" className="flex-1" disabled={submitting}>
-              {submitting ? 'Creating...' : 'Create Goal'}
+              {submitting ? 'Creating...' : t('common.save')}
             </Button>
           </div>
         </form>

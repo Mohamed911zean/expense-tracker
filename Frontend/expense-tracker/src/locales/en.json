@@ -1,0 +1,40 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "income": "Income",
+    "expense": "Expense",
+    "acquisitions": "Acquisitions",
+    "logout": "Logout"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Your financial overview at a glance",
+    "totalIncome": "Total Income",
+    "totalExpense": "Total Expenses",
+    "balance": "Balance",
+    "recentTransactions": "Recent Transactions",
+    "addTransaction": "Add Transaction",
+    "export": "Export"
+  },
+  "income": {
+    "title": "Portfolio Yield",
+    "subtitle": "Monthly recurring revenue overview",
+    "addIncome": "Add Income"
+  },
+  "expense": {
+    "title": "Expenses",
+    "subtitle": "Total expenses this month",
+    "addExpense": "Add Expense"
+  },
+  "acquisitions": {
+    "title": "Acquisitions",
+    "subtitle": "Curated milestones and luxury asset tracking",
+    "addGoal": "Add Goal"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "language": "العربية"
+  }
+}

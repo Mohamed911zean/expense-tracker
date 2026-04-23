@@ -7,8 +7,10 @@ import { SpendingChart, CategoryChart } from '../components/ui/Charts';
 import { Modal, Button, Input, Select } from '../components/ui/FormElements';
 import toast from 'react-hot-toast';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 export default function Dashboard() {
+  const { t } = useTranslation();
   const {
     getBalance, getTotalIncome, getTotalExpenses,
     getCategoryBreakdown, getMonthlyData,
@@ -108,10 +110,10 @@ export default function Dashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-on-surface text-2xl md:text-3xl font-bold text-tracking-tight">
-            Dashboard
+            {t('dashboard.title')}
           </h1>
           <p className="text-on-surface-variant text-sm mt-1">
-            Your financial overview at a glance
+            {t('dashboard.subtitle')}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -119,13 +121,13 @@ export default function Dashboard() {
             onClick={() => handleDownload('income')}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/20 text-on-surface-variant text-xs font-medium hover:text-primary transition-smooth cursor-pointer"
           >
-            <MdDownload className="text-base" /> Income
+            <MdDownload className="text-base" /> {t('nav.income')}
           </button>
           <button
             onClick={() => handleDownload('expense')}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/20 text-on-surface-variant text-xs font-medium hover:text-primary transition-smooth cursor-pointer"
           >
-            <MdDownload className="text-base" /> Expenses
+            <MdDownload className="text-base" /> {t('nav.expense')}
           </button>
         </div>
       </div>
@@ -141,12 +143,12 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           <BalanceCard balance={balance} income={totalIncome} expenses={totalExpense} />
           <StatCard
-            title="Total Income"
+            title={t('dashboard.totalIncome')}
             value={`$${totalIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
             icon={<MdTrendingUp />}
           />
           <StatCard
-            title="Total Expenses"
+            title={t('dashboard.totalExpense')}
             value={`$${totalExpense.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
             icon={<span className="text-base">📉</span>}
           />
@@ -169,7 +171,7 @@ export default function Dashboard() {
             const t = recentTransactions.find((r) => r.id === id);
             if (t) handleDelete(id, t.type);
           }}
-          title="Recent Transactions"
+          title={t('dashboard.recentTransactions')}
           emptyMessage="No transactions yet. Start by adding income or expenses."
         />
       )}
@@ -178,13 +180,13 @@ export default function Dashboard() {
       <button
         onClick={() => setShowAddModal(true)}
         className="fixed bottom-20 right-4 md:bottom-12 md:right-12 w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center z-[90] transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
-        title="Add Transaction"
+        title={t('dashboard.addTransaction')}
       >
         <MdAdd className="text-2xl md:text-3xl" />
       </button>
 
       {/* Add Transaction Modal */}
-      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add Transaction">
+      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title={t('dashboard.addTransaction')}>
         <form onSubmit={handleAddTransaction} className="space-y-5">
           {/* Type toggle */}
           <div className="grid grid-cols-2 gap-3">
@@ -247,11 +249,11 @@ export default function Dashboard() {
           />
 
           <div className="flex gap-3 pt-2">
-            <Button type="button" variant="secondary" onClick={() => setShowAddModal(false)} className="flex-1">
-              Cancel
+            <Button type="button" variant="secondary" onClick={() => setShowAddModal(false)} className="flex-1 cursor-pointer">
+              {t('common.cancel')}
             </Button>
-            <Button type="submit" className="flex-1" disabled={submitting}>
-              {submitting ? 'Saving...' : 'Add Transaction'}
+            <Button type="submit" className="flex-1 cursor-pointer" disabled={submitting}>
+              {submitting ? 'Saving...' : t('common.save')}
             </Button>
           </div>
         </form>

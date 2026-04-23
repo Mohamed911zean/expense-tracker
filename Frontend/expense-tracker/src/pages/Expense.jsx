@@ -7,8 +7,10 @@ import { CategoryChart } from '../components/ui/Charts';
 import { Modal, Button, Input, Select } from '../components/ui/FormElements';
 import toast from 'react-hot-toast';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 export default function Expense() {
+  const { t } = useTranslation();
   const {
     getExpenses, getTotalExpenses, getCategoryBreakdown,
     addExpense, deleteExpense, downloadExpense,
@@ -76,10 +78,10 @@ export default function Expense() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-on-surface text-2xl md:text-3xl font-bold text-tracking-tight">
-            Expenses
+            {t('expense.title')}
           </h1>
           <p className="text-on-surface-variant text-sm mt-1">
-            Total expenses this month
+            {t('expense.subtitle')}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -87,7 +89,7 @@ export default function Expense() {
             onClick={handleDownload}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/20 text-on-surface-variant text-xs font-medium hover:text-primary transition-smooth cursor-pointer"
           >
-            <MdDownload className="text-base" /> Export
+            <MdDownload className="text-base" /> {t('dashboard.export')}
           </button>
         </div>
       </div>
@@ -157,14 +159,14 @@ export default function Expense() {
       {/* Global FAB */}
       <button
         onClick={() => setShowAddModal(true)}
-        className="fixed bottom-20 right-4 md:bottom-12 md:right-12 w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center z-[90] transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
-        title="Add Expense"
+        className="fixed bottom-20 right-4 md:bottom-12 md:right-12 w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center z-50 transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
+        title={t('expense.addExpense')}
       >
         <MdAdd className="text-2xl md:text-3xl" />
       </button>
 
       {/* Add Expense Modal */}
-      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add Expense">
+      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title={t('expense.addExpense')}>
         <form onSubmit={handleAdd} className="space-y-5">
           <Select
             label="Category"
@@ -197,11 +199,11 @@ export default function Expense() {
             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
           />
           <div className="flex gap-3 pt-2">
-            <Button type="button" variant="secondary" onClick={() => setShowAddModal(false)} className="flex-1">
-              Cancel
+            <Button type="button" variant="secondary" onClick={() => setShowAddModal(false)} className="flex-1 cursor-pointer">
+              {t('common.cancel')}
             </Button>
-            <Button type="submit" className="flex-1" disabled={submitting}>
-              {submitting ? 'Saving...' : 'Add Expense'}
+            <Button type="submit" className="flex-1 cursor-pointer" disabled={submitting}>
+              {submitting ? 'Saving...' : t('common.save')}
             </Button>
           </div>
         </form>
