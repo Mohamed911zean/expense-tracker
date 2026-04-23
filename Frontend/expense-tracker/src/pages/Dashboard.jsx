@@ -192,7 +192,7 @@ export default function Dashboard() {
       {/* Global FAB */}
       <button
         onClick={() => setShowAddModal(true)}
-        className="fixed bottom-20 right-4 md:bottom-12 md:right-12 w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center z-50 transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
+        className="fixed bottom-20 right-4 md:bottom-12 md:right-12 w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-full gradient-primary text-on-primary shadow-malachite-lg flex items-center justify-center z-[90] transition-smooth hover:scale-105 active:scale-95 cursor-pointer"
         title="Add Transaction"
       >
         <MdAdd className="text-2xl md:text-3xl" />

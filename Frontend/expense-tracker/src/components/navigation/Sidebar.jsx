@@ -94,8 +94,8 @@ export default function Sidebar() {
       </header>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 glass border-t border-outline-variant/15 pb-safe">
-        <div className="flex items-center justify-between px-1 py-1.5 overflow-x-auto no-scrollbar">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-[100] bg-surface flex border-t border-outline-variant/30 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+        <div className="flex items-center justify-between px-1 py-1.5 w-full overflow-x-auto no-scrollbar">
           {navItems.map((item) => (
             <NavLink
               key={item.path}
